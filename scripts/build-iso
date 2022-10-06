@@ -9,7 +9,7 @@ echo "Start building ISO image"
 
 HARVESTER_INSTALLER_VERSION=v1.0.3
 
-git clone --branch ${HARVESTER_INSTALLER_VERSION} --single-branch --depth 1 https://github.com/harvester/harvester-installer.git ../harvester-installer
+git clone --single-branch --depth 1 https://github.com/inaccel/harvester-installer.git ../harvester-installer
 
 cd ../harvester-installer/scripts
 
