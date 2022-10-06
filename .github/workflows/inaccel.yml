@@ -1,0 +1,31 @@
+name: InAccel
+on:
+  workflow_dispatch:
+    inputs:
+      bucket:
+        required: true
+        default: inaccel/harvester
+      version:
+        required: true
+        default: 1.0.3
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    - name: Build
+      run: make build-iso
+      env:
+        DRONE_TAG: v${{ github.event.inputs.version }}
+    - name: Upload
+      run: |
+        aws s3 cp dist/artifacts/harvester-v${{ github.event.inputs.version }}-amd64.iso s3://${{ github.event.inputs.bucket }}/
